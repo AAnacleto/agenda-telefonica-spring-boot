@@ -25,9 +25,6 @@ public interface ContatoRepository extends JpaRepository<Contato, Long> {
 
     long countByAtivoFalse();
 
-    // Listar todos os favoritos (inclusive inativos, se necessário)
-    List<Contato> findByFavoritoTrue();
-
-    long countByFavoritoTrue();
+    long countByFavoritoTrueAndAtivoTrue();
 
 }

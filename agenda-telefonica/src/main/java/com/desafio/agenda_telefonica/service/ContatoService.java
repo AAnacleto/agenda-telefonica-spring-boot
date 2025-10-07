@@ -20,38 +20,12 @@ public class ContatoService {
     // =============================
 
     // SALVAR
-   /* public Contato salvar(Contato contato) {
-        // Validar celular
-        if(contato.getCelular() == null || contato.getCelular().isBlank()) {
-            throw new IllegalArgumentException("Celular não pode estar vazio");
-        }
-        validarCelularUnico(contato.getCelular(), null);
-
-        // transforma telefone vazio em null
-        if(contato.getTelefone() != null && contato.getTelefone().isBlank()) {
-            contato.setTelefone(null);
-        }
-
-        // Novo contato sempre ativo
-        contato.setAtivo(true);
-
-        try {
-            return repository.save(contato);
-        } catch (DataIntegrityViolationException e) {
-            throw new IllegalArgumentException("Celular já cadastrado!");
-        }
-    }*/
-
     public Contato salvar(Contato contato) {
         // 1. Validar celular não vazio
         if(contato.getCelular() == null || contato.getCelular().isBlank()) {
             throw new IllegalArgumentException("Celular não pode estar vazio");
         }
 
-        // 2. CORREÇÃO: Validar celular único, ignorando o ID se for uma atualização.
-        // Se 'contato.getId()' for nulo (novo), o 'validarCelularUnico' só verificará se
-        // o celular já existe em qualquer outro registro. Se não for nulo (atualização),
-        // ele ignorará o registro com esse ID durante a verificação.
         validarCelularUnico(contato.getCelular(), contato.getId());
 
         // 3. Transforma telefone vazio em null
@@ -59,20 +33,13 @@ public class ContatoService {
             contato.setTelefone(null);
         }
 
-        // 4. Melhoria Lógica: Define 'ativo' como true APENAS se for um NOVO contato.
-        // Isso evita reativar um contato que foi inativado durante uma atualização.
         if (contato.getId() == null) {
             contato.setAtivo(true);
         }
-        // Se for uma atualização, o status 'ativo' virá do objeto 'contato' (ou do que
-        // foi carregado previamente e modificado), respeitando a intenção da requisição.
 
-        // 5. Tenta salvar
         try {
             return repository.save(contato);
         } catch (DataIntegrityViolationException e) {
-            // Esta exceção de DB é uma segurança caso a validação em 2. falhe
-            // ou não exista no repositório (Constraint UNIQUE do banco).
             throw new IllegalArgumentException("Celular já cadastrado!");
         }
     }
@@ -156,7 +123,7 @@ public class ContatoService {
 
     // Listar contatos favoritos ativos
     public List<Contato> listarFavoritos() {
-        return repository.findByFavoritoTrue();
+        return repository.findByAtivoTrueAndFavoritoTrue();
     }
 
     public List<Contato> listarInativos(){
@@ -181,7 +148,7 @@ public class ContatoService {
     }
 
     public long totalFavoritos(){
-        return repository.countByFavoritoTrue();
+        return repository.countByFavoritoTrueAndAtivoTrue();
     }
 
     // =============================

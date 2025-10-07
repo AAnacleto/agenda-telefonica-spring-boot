@@ -1,9 +1,6 @@
 package com.desafio.agenda_telefonica.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name= "contato")
@@ -16,7 +13,6 @@ public class Contato {
 
     @Column(nullable = false)
     private String nome;
-
 
     private String telefone;
 

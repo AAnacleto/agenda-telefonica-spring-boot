@@ -93,11 +93,6 @@ public class ContatoController {
         }, "Contato ativado com sucesso!");
     }
 
-    // Alternar favorito
-   /* @PatchMapping("/{id}/favorito")
-    public ResponseEntity<ResponseDTO<Contato>> toggleFavorito(@PathVariable Long id) {
-        return criarResposta(() -> service.toggleFavorito(id), "Status de favorito atualizado com sucesso!");
-    }*/
 
     @PatchMapping("/{id}/favoritar")
     public ResponseEntity<ResponseDTO<Contato>> favoritarContato(@PathVariable Long id) {
