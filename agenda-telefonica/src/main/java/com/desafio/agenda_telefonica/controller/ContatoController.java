@@ -65,9 +65,10 @@ public class ContatoController {
 
     // Buscar contato por ID (retorna objeto diretamente)
     @GetMapping("/{id}")
-    public Contato buscarPorID(@PathVariable Long id) {
-        return service.buscarPorId(id)
-                .orElseThrow(() -> new IllegalArgumentException("Contato não encontrado com ID: " + id));
+    public ResponseEntity<ResponseDTO<Contato>> buscarPorID(@PathVariable Long id) {
+        return criarResposta(() -> service.buscarPorId(id)
+                        .orElseThrow(() -> new IllegalArgumentException("Contato não encontrado com ID: " + id)),
+                "Contato encontrado com sucesso!");
     }
 
     // Atualizar contato

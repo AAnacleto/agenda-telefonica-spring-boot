@@ -97,15 +97,7 @@ public class ContatoService {
         repository.save(contato);
     }
 
-    // Alternar favorito
-    public Contato toggleFavorito(Long id) {
-        Contato contato = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Contato não encontrado"));
-        contato.setFavorito(!contato.isFavorito());
-        return repository.save(contato);
-    }
-
-    // Favoritar um contato
+     // Favoritar um contato
     public Contato favoritar(Long id) {
         Contato contato = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Contato não encontrado"));
