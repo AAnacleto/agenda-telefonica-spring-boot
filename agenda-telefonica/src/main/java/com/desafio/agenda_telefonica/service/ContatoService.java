@@ -21,15 +21,14 @@ public class ContatoService {
 
     // SALVAR
     public Contato salvar(Contato contato) {
-        // 1. Validar celular não vazio
-        if(contato.getCelular() == null || contato.getCelular().isBlank()) {
+        if (contato.getCelular() == null || contato.getCelular().isBlank()) {
             throw new IllegalArgumentException("Celular não pode estar vazio");
         }
 
         validarCelularUnico(contato.getCelular(), contato.getId());
 
-        // 3. Transforma telefone vazio em null
-        if(contato.getTelefone() != null && contato.getTelefone().isBlank()) {
+        // Normaliza telefone vazio pra null (mas não interfere em nada)
+        if (contato.getTelefone() != null && contato.getTelefone().isBlank()) {
             contato.setTelefone(null);
         }
 
@@ -37,12 +36,10 @@ public class ContatoService {
             contato.setAtivo(true);
         }
 
-        try {
-            return repository.save(contato);
-        } catch (DataIntegrityViolationException e) {
-            throw new IllegalArgumentException("Celular já cadastrado!");
-        }
+        return repository.save(contato);
     }
+
+
 
     // Listar todos contatos ativos
     public List<Contato> listar() {
@@ -148,14 +145,14 @@ public class ContatoService {
     // =============================
 
     private void validarCelularUnico(String celular, Long contatoId) {
-        Optional<Contato> contatoExistente = repository.findByCelular(celular);
+        Optional<Contato> existente = repository.findByCelular(celular);
 
-        // Se encontrou algum contato com esse celular
-        if (contatoExistente.isPresent()) {
-            // Se é criação (contatoId == null) ou se é atualização de outro contato
-            if (contatoId == null || !contatoExistente.get().getId().equals(contatoId)) {
+        if (existente.isPresent()) {
+            // Se é novo ou está tentando usar o número de outro contato
+            if (contatoId == null || !existente.get().getId().equals(contatoId)) {
                 throw new IllegalArgumentException("Celular já cadastrado!");
             }
         }
     }
+
 }
